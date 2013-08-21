@@ -3,7 +3,12 @@ package com.github.raonifn.registroponto;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Date;
 
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.WindowConstants;
 
@@ -13,7 +18,13 @@ public class RegistroPontoController {
 
 	private Timer timer;
 
-	private long init;
+	private Date init;
+
+	private final String fileName;
+
+	public RegistroPontoController(String fileName) {
+		this.fileName = fileName;
+	}
 
 	public void start() {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -43,6 +54,13 @@ public class RegistroPontoController {
 
 		frame.getBtParar().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(frame,
+						"Deseja realmente registrar parada?",
+						"Registrar Parada", JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE) != JOptionPane.YES_OPTION) {
+					return;
+				}
+
 				frame.getBtParar().setEnabled(false);
 				frame.getBtIniciar().setEnabled(true);
 
@@ -60,25 +78,44 @@ public class RegistroPontoController {
 	}
 
 	private void iniciarContador() {
+		showLabel();
+
 		timer = new Timer(1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				long now = System.currentTimeMillis();
-				long diff = now - init;
-
-				long hours = diff / 1000 / 60 / 60;
-				long minutes = (diff - hours) / 1000 / 60;
-				long seconds = (diff - hours - minutes) / 1000;
-
-				String text = String.format("%02d:%02d:%02d", hours, minutes,
-						seconds);
-				frame.getJLabelTempo().setText(text);
+				showLabel();
 			}
 		});
 		timer.start();
 	}
 
-	private long registrarHora(String string) {
-		return System.currentTimeMillis();
+	private void showLabel() {
+		long now = System.currentTimeMillis();
+		long diff = now - init.getTime();
+
+		long hours = diff / 1000 / 60 / 60;
+		long minutes = (diff - hours) / 1000 / 60;
+		long seconds = (diff - hours - minutes) / 1000;
+
+		String text = String.format("Inicio: %TT   %02d:%02d:%02d", init,
+				hours, minutes, seconds);
+		frame.getJLabelTempo().setText(text);
 	}
 
+	private Date registrarHora(String tipo) {
+		Date now = new Date();
+
+		PrintWriter print = null;
+		try {
+			print = new PrintWriter(new FileWriter(fileName, true));
+			print.format("%s,%s\n", now.getTime(), tipo);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (print != null) {
+				print.close();
+			}
+		}
+
+		return now;
+	}
 }
