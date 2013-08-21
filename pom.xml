@@ -3,7 +3,7 @@
 	<name>registro-ponto</name>
 	<groupId>com.github.raonifn</groupId>
 	<artifactId>registro-ponto</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<dependencies>
