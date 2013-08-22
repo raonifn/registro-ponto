@@ -30,7 +30,10 @@ public class RegistroPontoController {
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.getJLabelTempo().setText("A iniciar");
 		frame.getJLabelTempo()
-				.setFont(new Font(Font.MONOSPACED, Font.BOLD, 20));
+				.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
+                
+                frame.getJLabelHora()
+				.setFont(new Font(Font.MONOSPACED, Font.BOLD, 30));
 
 		takeControl();
 
@@ -70,7 +73,19 @@ public class RegistroPontoController {
 			}
 
 		});
+                
+                new Timer(2 * 1000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				atualizarHora();
+			}
+		});
+                atualizarHora();
 	}
+        
+        private void atualizarHora() {
+            frame.getJLabelHora().setText(
+                            String.format("%1$td/%1$tm/%1$ty %1$TT", new Date()));
+        }
 
 	private void finalizarContador() {
 		frame.getJLabelTempo().setText("A iniciar");
