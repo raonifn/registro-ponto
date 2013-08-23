@@ -114,7 +114,7 @@ public class RegistroPontoController {
                 long minutesMili = minutes * 1000 * 60;
 		long seconds = (diff - hoursMili - minutesMili) / 1000;
 
-		String text = String.format("Inicio: %TT   %02d:%02d:%02d", init,
+		String text = String.format("Entrada: %TT   %02d:%02d:%02d", init,
 				hours, minutes, seconds);
 		frame.getJLabelTempo().setText(text);
 	}
