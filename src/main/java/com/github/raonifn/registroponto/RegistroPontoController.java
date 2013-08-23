@@ -74,11 +74,12 @@ public class RegistroPontoController {
 
 		});
                 
-                new Timer(2 * 1000, new ActionListener() {
+                Timer hora = new Timer(1 * 1000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				atualizarHora();
 			}
 		});
+                hora.start();
                 atualizarHora();
 	}
         
@@ -108,8 +109,10 @@ public class RegistroPontoController {
 		long diff = now - init.getTime();
 
 		long hours = diff / 1000 / 60 / 60;
-		long minutes = (diff - hours) / 1000 / 60;
-		long seconds = (diff - hours - minutes) / 1000;
+                long hoursMili = hours * 1000 * 60 * 60;
+		long minutes = (diff - hoursMili) / 1000 / 60;
+                long minutesMili = minutes * 1000 * 60;
+		long seconds = (diff - hoursMili - minutesMili) / 1000;
 
 		String text = String.format("Inicio: %TT   %02d:%02d:%02d", init,
 				hours, minutes, seconds);
@@ -122,7 +125,7 @@ public class RegistroPontoController {
 		PrintWriter print = null;
 		try {
 			print = new PrintWriter(new FileWriter(fileName, true));
-			print.format("%s,%s\n", now.getTime(), tipo);
+			print.format("%1$td/%1$tm/%1$ty %1$TT,%2$s,%3$s\n", now,now.getTime(), tipo);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
